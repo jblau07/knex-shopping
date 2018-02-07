@@ -11,6 +11,8 @@ const users = require('./routes/users');
 
 const app = express();
 
+app.use(bodyParse.urlencoded({ extended: true }))
+
 // app.get('/tasks', (req, res) => {
   // use the knex variable above to create dynamic queries
 // });
