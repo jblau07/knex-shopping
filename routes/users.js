@@ -35,7 +35,7 @@ router.post('/login', (req, res) => {
   }
   email = email.toLowerCase();
 
-  return knex.raw('SELECT * FROM users WHERE users.email = ?', [email])
+  return knex.raw('SELECT * FROM users WHERE email = ?', [email])
 
     .then(result => {
       if (!result.rows.length) {
@@ -67,7 +67,7 @@ router.post('/register', (req, res) => {
   }
   email = email.toLowerCase();
 
-  return knex.raw('SELECT users.email FROM users WHERE users.email = ?', [email])
+  return knex.raw('SELECT email FROM users WHERE email = ?', [email])
 
     .then(result => {
       if (result.rows.length) {
@@ -100,10 +100,10 @@ router.put('/:user_id/forgot-password', (req, res) => {
   }
   return knex.raw('SELECT * FROM users WHERE id = ?', [id])
     .then(result => {
-      if (!result.rows.length) {
-        throw new Error('User ID not found');
-      } else {
+      if (result.rows.length) {
         return result
+      } else {
+        throw new Error('User ID not found');
       }
     })
     .then(result => {
