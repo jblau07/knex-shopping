@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.get('/:user_id', (req, res) => {
   let id = req.params.user_id;
-
   // if(isNaN(id)){
   //   return res.status(400).json({message: 'Invalid URL'});
   // }
@@ -35,7 +34,6 @@ router.post('/login', (req, res) => {
     });
   }
   email = email.toLowerCase();
-  password = password;
 
   return knex.raw('SELECT * FROM users WHERE users.email = ?', [email])
 
@@ -54,7 +52,6 @@ router.post('/login', (req, res) => {
       });
     });
 });
-
 
 router.post('/register', (req, res) => {
 
@@ -95,53 +92,58 @@ router.post('/register', (req, res) => {
 router.put('/:user_id/forgot-password', (req, res) => {
   let id = req.params.user_id;
   let password = req.body.password;
-  
+
   if (!password) {
     return res.status(400).json({
       message: 'Missing password'
     })
   }
-
   return knex.raw('SELECT * FROM users WHERE id = ?', [id])
-  .then(result => {
-    if(!result.rows.length) {
-      throw new Error('User ID not found');
-    } else {
-      return result
-    }
-  })
-  .then(result => {
-return knex.raw('UPDATE users SET password = ? WHERE id = ?', [password, id])
-  })
-.then(result => {
-  return res.json({message: 'New password created'});
-})
-.catch(err => {
-  return res.status(404).json({message: err.message});
+    .then(result => {
+      if (!result.rows.length) {
+        throw new Error('User ID not found');
+      } else {
+        return result
+      }
+    })
+    .then(result => {
+      return knex.raw('UPDATE users SET password = ? WHERE id = ?', [password, id])
+    })
+    .then(result => {
+      return res.json({
+        message: 'New password created'
+      });
+    })
+    .catch(err => {
+      return res.status(404).json({
+        message: err.message
+      });
+    });
 });
-});
-
-
 
 router.delete('/:user_id', (req, res) => {
   let id = req.params.user_id;
   return knex.raw('SELECT * from users WHERE id = ?', [id])
-  .then(result => {
-    if (!result.rows.length) {
-      throw new Error('User ID not found')
-    } else {
-      return result
-    }
-  })
-  .then(result => {
-  return knex.raw('DELETE FROM users WHERE id = ?', [result.rows[0].id])
-  })
-  .then(result => {
-    return res.json({message : `User id: ${id} successfully deleted`});
-  })
-  .catch(err => {
-    return res.json({message: err.message});
-  });
+    .then(result => {
+      if (!result.rows.length) {
+        throw new Error('User ID not found')
+      } else {
+        return result
+      }
+    })
+    .then(result => {
+      return knex.raw('DELETE FROM users WHERE id = ?', [result.rows[0].id])
+    })
+    .then(result => {
+      return res.json({
+        message: `User id: ${id} successfully deleted`
+      });
+    })
+    .catch(err => {
+      return res.json({
+        message: err.message
+      });
+    });
 });
 
 module.exports = router;

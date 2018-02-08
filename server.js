@@ -13,9 +13,6 @@ const app = express();
 
 app.use(bodyParse.urlencoded({ extended: true }))
 
-// app.get('/tasks', (req, res) => {
-  // use the knex variable above to create dynamic queries
-// });
 app.use('/cart', cart);
 app.use('/products', products);
 app.use('/users', users);
